@@ -4,15 +4,15 @@ def carregar_e_preparar_base(caminho_arquivo):
     """Lê o CSV usando a biblioteca padrão do Python e retorna as versões A e B."""
     dados_lista = []
     
-    # Abre o arquivo CSV usando ponto e vírgula como separador
     with open(caminho_arquivo, mode='r', encoding='utf-8-sig') as arquivo: # encoding='utf-8-sig' remove o caractere invisível
         leitor = csv.DictReader(arquivo, delimiter=';')
         
         for linha in leitor:
-            # Descobre se a chave chama 'id', '﻿id' ou 'id_cliente'
+
             chave_id = next(k for k in linha.keys() if 'id' in k.lower())
             
             # Converte o ID para número inteiro
+            
             linha['id'] = int(linha[chave_id])
             dados_lista.append(linha)
             
@@ -28,6 +28,7 @@ def carregar_e_preparar_base(caminho_arquivo):
     return versao_a, versao_b
 
 # Bloco principal de execução
+
 if __name__ == "__main__":
     caminho = r"C:/Users/Rana Luize/Documents/usuarios (1).csv"
     
@@ -39,11 +40,11 @@ if __name__ == "__main__":
     print("\nPrimeiro elemento da Versão B (Ordenada):")
     print(base_b[0])
 
-    # ==========================================
+# ======================================================
 # ALGORITMOS DE PESQUISA (Com contagem de comparações)
-# ==========================================
+# ======================================================
 
-# 1. Busca Linear Iterativa (Procura um por um usando um loop normal)
+# 1. Busca Linear Iterativa 
 def busca_linear_iterativa(lista, id_alvo):
     comparacoes = 0
     for i in range(len(lista)):
@@ -64,7 +65,8 @@ def busca_linear_recursiva_aux(lista, id_alvo, indice, comparacoes):
 def busca_linear_recursiva(lista, id_alvo):
     return busca_linear_recursiva_aux(lista, id_alvo, 0, 0)
 
-# 3. Busca Binária Iterativa (Funciona na lista ordenada, cortando o caminho pela metade)
+# 3. Busca Binária Iterativa
+
 def busca_binaria_iterativa(lista, id_alvo):
     inicio = 0
     fim = len(lista) - 1
@@ -82,6 +84,7 @@ def busca_binaria_iterativa(lista, id_alvo):
     return -1, comparacoes
 
 # 4. Busca Binária Recursiva (Busca binária feita com recursão)
+
 def busca_binaria_recursiva_aux(lista, id_alvo, inicio, fim, comparacoes):
     if inicio > fim:
         return -1, comparacoes
@@ -104,18 +107,21 @@ if __name__ == "__main__":
     base_a, base_b = carregar_e_preparar_base(caminho)
     
     # ID existente (o ID do primeiro cliente da base ordenada)
+
     id_para_procurar = base_b[0]['id']
     print(f"\n--- Testando buscas pelo ID: {id_para_procurar} ---")
     
     # 1. Testando Linear Iterativa na Base A (Desordenada)
+
     pos, comp = busca_linear_iterativa(base_a, id_para_procurar)
     print(f"Linear Iterativa -> Índice: {pos} | Comparações: {comp}")
     
     # 2. Testando Binária Iterativa na Base B (Ordenada)
+
     pos, comp = busca_binaria_iterativa(base_b, id_para_procurar)
     print(f"Binária Iterativa -> Índice: {pos} | Comparações: {comp}")
 
-    # ==========================================
+# ==========================================
 # ALGORITMOS DE ORDENAÇÃO (Com contagem de comparações e movimentações)
 # ==========================================
 
@@ -248,7 +254,7 @@ def quick_sort(arr):
     iguais = [x for x in arr if x['id'] == pivo]
     maiores = [x for x in arr if x['id'] > pivo]
     
-    # Contagem aproximada para fins didáticos do relatório
+    # Contagem aproximada 
     comp = len(arr) - 1
     mov = len(arr)
     
@@ -325,6 +331,7 @@ if __name__ == "__main__":
     base_a, base_b = carregar_e_preparar_base(caminho)
     
     # Lista com todos os algoritmos implementados
+
     algoritmos = [
         ("Bubble Sort", bubble_sort),
         ("Selection Sort", selection_sort),
@@ -344,8 +351,9 @@ if __name__ == "__main__":
         print(f"{nome:<18} | {tempo:<18.6f} | {comp:<15} | {mov}")
         
     print("="*80)
+
 if __name__ == "__main__":
-    # Mudando para a base de 10k registros
+    # Mudando para a base de 10 mil registros
     caminho = r"C:/Users/Rana Luize/Documents/usuarios (2).csv"
     base_a, base_b = carregar_e_preparar_base(caminho)
     
@@ -368,3 +376,67 @@ if __name__ == "__main__":
         print(f"{nome:<18} | {tempo:<18.6f} | {comp:<15} | {mov}")
         
     print("="*80)
+
+
+    if __name__ == "__main__":
+    # Base gigante de 100.000 registros
+     caminho = r"C:/Users/Rana Luize/Documents/usuarios (3).csv"
+    
+    base_a, base_b = carregar_e_preparar_base(caminho)
+    
+    # Focando nos algoritmos eficientes O(n log n) para grande escala
+
+    algoritmos = [
+       # ("Bubble Sort", bubble_sort),
+       # ("Selection Sort", selection_sort),
+       # ("Insertion Sort", insertion_sort),
+        ("Shell Sort", shell_sort),
+        ("Merge Sort", merge_sort),
+        ("Quick Sort", quick_sort),
+        ("Heap Sort", heap_sort)
+    #Bubble Sort, Selection Sort e Insertion Sort demoram muito para rodar, deixando o dispositivo lento e travando.
+    ]
+    
+    print("\n" + "="*80)
+    print(f"{'ALGORITMO':<18} | {'TEMPO MÉDIO (s)':<18} | {'COMPARAÇÕES':<15} | {'MOVIMENTAÇÕES'}")
+    print("="*80)
+    
+    for nome, func in algoritmos:
+        # Usando 1 repetição para tirar uma média precisa e rápida
+
+        tempo, comp, mov = benchmark_ordenacao(func, base_a, repeticoes=1)
+        print(f"{nome:<18} | {tempo:<18.6f} | {comp:<15} | {mov}")
+        
+        print("="*80)
+
+import matplotlib.pyplot as plt
+
+# Algoritmos e seus respetivos tempos em segundos 
+
+algoritmos = [
+    'Bubble', 'Selection', 'Insertion', 
+    'Shell', 'Merge', 'Quick', 'Heap'
+]
+tempos = [6.329759, 3.810018, 3.065587, 0.040135, 0.022215, 0.023625, 0.040386]
+
+# Criar o gráfico de barras
+
+plt.figure(figsize=(10, 6))
+barras = plt.bar(algoritmos, tempos, color=['#e74c3c', '#e67e22', '#f1c40f', '#3498db', '#2ecc71', '#1abc9c', "#9131b7"])
+
+plt.title('Comparativo de Tempo de Execução dos Algoritmos de Ordenação', fontsize=14, fontweight='bold')
+plt.xlabel('Algoritmos de Ordenação', fontsize=12)
+plt.ylabel('Tempo Médio (segundos)', fontsize=12)
+plt.yscale('log') 
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# valores exatos
+
+for barra in barras:
+    h = barra.get_height()
+    plt.text(barra.get_x() + barra.get_width()/2., h * 1.15, f'{h:.3f}s', ha='center', va='bottom', fontsize=9)
+
+plt.tight_layout()
+
+plt.savefig('grafico_desempenho.png', dpi=300)
+print("A imagem 'grafico_desempenho.png' foi criada.")
