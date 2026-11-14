@@ -12,7 +12,7 @@ def carregar_e_preparar_base(caminho_arquivo):
             chave_id = next(k for k in linha.keys() if 'id' in k.lower())
             
             # Converte o ID para número inteiro
-            
+
             linha['id'] = int(linha[chave_id])
             dados_lista.append(linha)
             
@@ -440,3 +440,5 @@ plt.tight_layout()
 
 plt.savefig('grafico_desempenho.png', dpi=300)
 print("A imagem 'grafico_desempenho.png' foi criada.")
+
+print("Fim")
